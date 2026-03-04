@@ -1,0 +1,56 @@
+.meals-container{
+  padding:40px;
+}
+
+.meal-form{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+  margin-bottom:30px;
+  flex-wrap:wrap;
+}
+
+.meal-form select,
+.meal-form input{
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+.meal-form button{
+  padding:10px 18px;
+  background:#4CAF50;
+  border:none;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.meal-form button:hover{
+  background:#43a047;
+}
+
+.meal-list{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+}
+
+.meal-list ul{
+  padding-left:20px;
+}
+
+.meal-list li{
+  margin:8px 0;
+}
+
+.protein-summary{
+  background:#4CAF50;
+  color:white;
+  padding:20px;
+  border-radius:10px;
+  width:220px;
+  text-align:center;
+}

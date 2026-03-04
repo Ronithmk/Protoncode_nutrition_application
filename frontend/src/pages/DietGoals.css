@@ -1,0 +1,61 @@
+.goals-container{
+  max-width:600px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.goals-title{
+  font-size:28px;
+  margin-bottom:5px;
+}
+
+.goals-subtitle{
+  color:#666;
+  margin-bottom:25px;
+}
+
+.goals-form{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.goal-field{
+  display:flex;
+  flex-direction:column;
+}
+
+.goal-field label{
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+.goal-field input{
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:14px;
+}
+
+.goal-field input:focus{
+  outline:none;
+  border-color:#4CAF50;
+}
+
+.save-goals-btn{
+  margin-top:10px;
+  padding:12px;
+  background:#4CAF50;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.save-goals-btn:hover{
+  background:#43a047;
+}
