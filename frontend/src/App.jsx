@@ -6,6 +6,9 @@ import DietGoals from "./pages/DietGoals";
 import Exercise  from "./pages/Exercise";
 import Meals     from "./pages/Meals";
 import Recipes   from "./pages/Recipes";
+import Welcome from "./pages/Welcome";   // ← add this
+
+
 
 function App() {
   return (
@@ -13,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/"           element={<Login />} />
         <Route path="/register"   element={<Register />} />
+        <Route path="/welcome" element={<Welcome />} />
         <Route path="/dashboard"  element={<Dashboard />} />
         <Route path="/diet-goals" element={<DietGoals />} />
         <Route path="/exercise"   element={<Exercise />} />
