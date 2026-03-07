@@ -273,13 +273,12 @@ export default function Welcome() {
     }
   }, [dark]);
 
- // In Welcome.jsx
-const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  setUser(null);
-  navigate("/");
-};
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/welcome");
+  };
 
   const onLoginSuccess = () => {
     const u = JSON.parse(localStorage.getItem("user"));
