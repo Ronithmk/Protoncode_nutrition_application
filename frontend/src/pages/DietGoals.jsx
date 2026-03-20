@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../api/axios";
+import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const STYLES = `

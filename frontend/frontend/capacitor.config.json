@@ -1,0 +1,8 @@
+{
+  "appId": "com.nutrition.app",
+  "appName": "NutriTrack",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": true
+  }
+}

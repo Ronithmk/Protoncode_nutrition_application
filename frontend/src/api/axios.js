@@ -1,26 +1,16 @@
 import axios from "axios";
 
-// Detect if running inside Android WebView
-const isAndroid = navigator.userAgent.includes("Android");
-
-// Choose API URL
-const BASE_URL = isAndroid
-  ? "http://10.0.2.2:8000"
-  : "http://127.0.0.1:8000";
-
 const API = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "http://localhost:5000/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Attach JWT token automatically
+// Automatically attach token to every request
 API.interceptors.request.use((config) => {
-
   const token = localStorage.getItem("token");
-
-  if(token){
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
