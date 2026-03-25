@@ -1,7 +1,7 @@
 import { useState } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
-import "./auth.css";
+import "./Login.css";
 
 function Register() {
   const [name, setName]         = useState("");

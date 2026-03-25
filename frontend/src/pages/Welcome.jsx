@@ -6,6 +6,7 @@ function LoginModal({ onClose, onSuccess }) {
   const [tab, setTab] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [err, setErr] = useState("");
+  const navigate = useNavigate();
 
   const handle = (e) => {
     e.preventDefault();
@@ -43,6 +44,16 @@ function LoginModal({ onClose, onSuccess }) {
             {tab === "login" ? "Register free" : "Login"}
           </span>
         </p>
+        <p style={{ textAlign: "center", marginTop: "12px", fontSize: "12px", color: "rgba(100,100,100,0.6)" }}>
+          <span
+            onClick={() => { onClose(); navigate("/login"); }}
+            style={{ cursor: "pointer", color: "#7c3aed", fontWeight: 600, transition: "opacity 0.2s" }}
+            onMouseEnter={e => e.target.style.opacity = "0.7"}
+            onMouseLeave={e => e.target.style.opacity = "1"}
+          >
+            🛡️ Admin Login
+          </span>
+        </p>
       </div>
     </div>
   );
@@ -51,24 +62,30 @@ function LoginModal({ onClose, onSuccess }) {
 function ProfileMenu({ user, onLogout }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+
+  // ✅ Safe display name — falls back to email prefix if name is missing
+  const displayName = user.name || user.email?.split("@")[0] || "User";
+  const displayInitial = displayName[0].toUpperCase();
+
   useEffect(() => {
     const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
   }, []);
+
   return (
     <div className="nu-profile-wrap" ref={ref}>
       <button className="nu-profile-btn" onClick={() => setOpen(o => !o)}>
-        <div className="nu-profile-av">{user.name[0].toUpperCase()}</div>
-        <span className="nu-profile-name">{user.name}</span>
+        <div className="nu-profile-av">{displayInitial}</div>
+        <span className="nu-profile-name">{displayName}</span>
         <span style={{ fontSize: 10, opacity: .6 }}>{open ? "▲" : "▼"}</span>
       </button>
       {open && (
         <div className="nu-profile-drop">
           <div className="nu-drop-header">
-            <div className="nu-drop-av">{user.name[0].toUpperCase()}</div>
+            <div className="nu-drop-av">{displayInitial}</div>
             <div>
-              <div className="nu-drop-name">{user.name}</div>
+              <div className="nu-drop-name">{displayName}</div>
               <div className="nu-drop-email">{user.email}</div>
             </div>
           </div>
@@ -250,8 +267,14 @@ export default function Welcome() {
   const [dark, setDark] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showContact, setShowContact] = useState(false);
+
+  // ✅ Safely parse user — rejects malformed objects missing email
   const [user, setUser] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("user")); } catch { return null; }
+    try {
+      const u = JSON.parse(localStorage.getItem("user"));
+      if (!u || !u.email) return null;
+      return u;
+    } catch { return null; }
   });
 
   useEffect(() => {
@@ -276,13 +299,16 @@ export default function Welcome() {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("role");  // ✅ also clear role on logout
     setUser(null);
-    navigate("/welcome");
+    navigate("/");
   };
 
   const onLoginSuccess = () => {
-    const u = JSON.parse(localStorage.getItem("user"));
-    setUser(u);
+    try {
+      const u = JSON.parse(localStorage.getItem("user"));
+      if (u && u.email) setUser(u);
+    } catch {}
     setShowLogin(false);
     setTimeout(() => navigate("/dashboard"), 50);
   };

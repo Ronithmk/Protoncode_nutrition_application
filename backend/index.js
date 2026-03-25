@@ -1,33 +1,61 @@
 const express = require("express");
-const axios = require("axios");
+const mysql = require("mysql2");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-const API_KEY = "3384820908msh4410329c17bc93ep141a50jsn705166746724";
-
-app.get("/api/gif-proxy", async (req, res) => {
-  const { url } = req.query;
-  if (!url || url === "undefined") {
-    return res.status(400).send("Invalid URL");
-  }
-  try {
-    const response = await axios.get(url, {
-      responseType: "arraybuffer",
-      headers: {
-        "X-RapidAPI-Key": API_KEY,
-        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-        "Accept": "image/gif,image/*,*/*"
-      },
-      timeout: 10000
-    });
-    res.set("Content-Type", response.headers["content-type"] || "image/gif");
-    res.send(response.data);
-  } catch (err) {
-    console.error("GIF proxy error:", err.message, "URL:", url);
-    res.status(500).send("Failed to load GIF");
-  }
+// DB connection
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "Yashu@123",
+  database: "Proton_code"
 });
 
-app.listen(5000, () => console.log("✅ Server running on port 5000"));
+db.connect(err => {
+  if (err) {
+    console.error("❌ DB error:", err);
+    return;
+  }
+  console.log("✅ MySQL Connected");
+});
+
+// Serve GIF/image files
+app.use("/gifs", express.static(path.join(__dirname, "gifs")));
+app.use("/images", express.static(path.join(__dirname, "exercise_data")));
+
+// Debug: see your DB column names
+app.get("/api/debug", (req, res) => {
+  db.query("DESCRIBE exercises", (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(result);
+  });
+});
+
+// Get ALL exercises (no limit)
+app.get("/api/exercises", (req, res) => {
+  db.query("SELECT * FROM exercises", (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(result);
+  });
+});
+
+// Filter by bodyPart or target muscle
+app.get("/api/exercises/filter/:value", (req, res) => {
+  const value = req.params.value;
+  db.query(
+    "SELECT * FROM exercises WHERE bodyPart = ? OR target = ?",
+    [value, value],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(result);
+    }
+  );
+});
+
+app.listen(5000, () => {
+  console.log("🚀 Server running at http://localhost:5000");
+});

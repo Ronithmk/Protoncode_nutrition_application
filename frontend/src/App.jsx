@@ -7,7 +7,9 @@ import Exercise  from "./pages/Exercise";
 import Meals     from "./pages/Meals";
 import Recipes   from "./pages/Recipes";
 import Welcome   from "./pages/Welcome";
+import Admin     from "./pages/Admin";
 
+// ── Protects regular user pages ───────────────────────────────────────────────
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
   const user  = localStorage.getItem("user");
@@ -22,20 +24,39 @@ function ProtectedRoute({ children }) {
   }
 }
 
+// ── Protects admin pages — token + role must be "admin" ───────────────────────
+function AdminRoute({ children }) {
+  const token = localStorage.getItem("token");
+  const role  = localStorage.getItem("role");
+  if (!token)          return <Navigate to="/login" replace />;
+  if (role !== "admin") return <Navigate to="/dashboard" replace />;
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"        element={<Welcome />} />
-        <Route path="/welcome" element={<Navigate to="/" replace />} />
+
+        {/* Public routes */}
+        <Route path="/"         element={<Welcome />} />
+        <Route path="/welcome"  element={<Navigate to="/" replace />} />
         <Route path="/login"    element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* User protected routes */}
         <Route path="/dashboard"  element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/diet-goals" element={<ProtectedRoute><DietGoals /></ProtectedRoute>} />
         <Route path="/exercise"   element={<ProtectedRoute><Exercise /></ProtectedRoute>} />
         <Route path="/meals"      element={<ProtectedRoute><Meals /></ProtectedRoute>} />
         <Route path="/recipes"    element={<ProtectedRoute><Recipes /></ProtectedRoute>} />
-        <Route path="*"           element={<Navigate to="/" replace />} />
+
+        {/* Admin protected route */}
+        <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </BrowserRouter>
   );
